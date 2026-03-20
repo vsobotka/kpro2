@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<h1>List of all Dogs</h1>
+
+<ul>
+    <li th:each="d: ${dogs}" th:text="${d.name}"></li>
+</ul>
+
+</body>
+</html>
