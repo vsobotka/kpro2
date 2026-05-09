@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dog List</title>
+</head>
+<body>
+
+<h1>Dog Detail</h1>
+
+Name: <span th:text="${dog.name}"></span><br>
+Age: <span th:text="${dog.age}"></span><br>
+Owner: <span th:text="${dog.user.name}"></span><br>
+
+<br>
+
+<a th:href="@{'/dogs/' + ${dog.id} + '/edit'}">Edit this Dog</a><br>
+<a th:href="@{'/dogs/' + ${dog.id} + '/delete'}">Delete this Dog</a>
+
+</body>
+</html>

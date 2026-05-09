@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dog List</title>
+</head>
+<body>
+
+<h1>Dog List</h1>
+
+<a th:href="@{/dogs/create}">Create a New Dog</a>
+<br><br>
+
+<ul>
+    <li th:each="dog: ${dogs}">
+        <a th:href="@{'/dogs/' + ${dog.id}}" th:text="${dog.name}"></a>
+    </li>
+</ul>
+
+</body>
+</html>

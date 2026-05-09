@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>My App</title>
 </head>
 <body>
-<h1>List of all Dogs</h1>
+<h1>My App</h1>
 
-<ul>
-    <li th:each="d: ${dogs}" th:text="${d.name}"></li>
-</ul>
+
+<span sec:authentication="name"></span>
+<br><br>
+
+<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/users/}">List of Users</a>
+<br>
+<a th:href="@{/dogs/}">List of Dogs</a>
+
+<br><br>
+
+<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}">Administration</a>
+<br><br>
+
+<a th:href="@{/logout}">Logout</a>
 
 </body>
 </html>

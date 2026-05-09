@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.id != 0 ? 'Edit User' : 'New User'}"></title>
+</head>
+<body>
+
+<h1 th:text="${user.id != 0 ? 'Edit User' : 'New User'}"></h1>
+
+<form th:action="@{/users/save}" method="post" th:object="${user}">
+    <input type="hidden" th:field="*{id}">
+    Name: <input type="text" th:field="*{name}"><br>
+    Username: <input type="text" th:field="*{username}"><br>
+    Password: <input type="password" th:field="*{password}"><br>
+    Role: <select th:field="*{role}">
+        <option value="USER">USER</option>
+        <option value="ADMIN">ADMIN</option>
+    </select>
+    <input type="submit" value="Save">
+</form>
+
+</body>
+</html>

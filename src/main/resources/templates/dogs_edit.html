@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${dog.id != 0 ? 'Edit Dog' : 'New Dog'}"></title>
+</head>
+<body>
+
+<h1 th:text="${dog.id != 0 ? 'Edit Dog' : 'New Dog'}"></h1>
+
+<form th:action="@{/dogs/save}" method="post" th:object="${dog}">
+    <input type="hidden" th:field="*{id}">
+    Name: <input type="text" th:field="*{name}"><br>
+    Age: <input type="number" th:field="*{age}"><br>
+    Owner: <select th:field="*{user}">
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+    </select>
+    <br>
+    <input type="submit" value="Save">
+</form>
+
+</body>
+</html>
