@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.svelte-kit/
+assets/
+learning-records/
+lessons/
+reference/
+node_modules/
+*.MD
