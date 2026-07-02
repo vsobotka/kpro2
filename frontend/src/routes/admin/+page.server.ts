@@ -27,7 +27,7 @@ export const actions: Actions = {
       headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ symbol: f.get('symbol'), name: f.get('name'), unit: f.get('unit') }),
     });
-    if (!res.ok) return fail(400, { error: (await res.json()).error });
+    if (!res.ok) return fail(400, { error: (await res.json()).message });
     return { success: true };
   },
 };

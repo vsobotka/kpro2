@@ -35,6 +35,10 @@ public class TransactionRestController {
 
     @PostMapping("/withdraw")
     public void withdrawFunds(Authentication auth, @RequestBody TransactionRequest request) {
-        transactionService.withdraw(auth.getName(), request);
+        try {
+            transactionService.withdraw(auth.getName(), request);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

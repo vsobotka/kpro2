@@ -58,7 +58,7 @@ export const actions: Actions = {
       headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${cookies.get('session')}` },
       body: JSON.stringify(order),
     });
-    if (!res.ok) return fail(400, { error: (await res.json()).error });
+    if (!res.ok) return fail(400, { error: (await res.json()).message });
     return { success: true };
   },
 };

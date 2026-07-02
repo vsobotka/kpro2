@@ -8,7 +8,6 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
   const transactions = await (await fetch(`${PUBLIC_BACKEND_URL}/api/transactions`, {
     headers: { cookie: `JSESSIONID=${token}` },
   })).json();
-  console.log(transactions)
   return { transactions };
 };
 
@@ -25,7 +24,7 @@ export const actions: Actions = {
       headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ amount }),
     });
-    if (!res.ok) return fail(400, { error: (await res.json()).error });
+    if (!res.ok) return fail(400, { error: (await res.json()).message });
     return { success: true };
   },
   withdraw: async ({ request, fetch, cookies }) => {
@@ -40,7 +39,7 @@ export const actions: Actions = {
       headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ amount }),
     });
-    if (!res.ok) return fail(400, { error: (await res.json()).error });
+    if (!res.ok) return fail(400, { error: (await res.json()).message });
     return { success: true };
   }
 };
