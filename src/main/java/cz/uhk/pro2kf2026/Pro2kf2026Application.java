@@ -35,4 +35,27 @@ public class Pro2kf2026Application {
         };
     }
 
+    @Bean
+    CommandLineRunner seedUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            if (userRepository.findByUsername("alice") == null) {
+                User user = new User();
+                user.setUsername("alice");
+                user.setName("Alice");
+                user.setPassword(passwordEncoder.encode("alicepw"));
+                user.setRole("USER");
+                userRepository.save(user);
+            }
+
+            if (userRepository.findByUsername("bob") == null) {
+                User user = new User();
+                user.setUsername("bob");
+                user.setName("Bob");
+                user.setPassword(passwordEncoder.encode("bobpw"));
+                user.setRole("USER");
+                userRepository.save(user);
+            }
+        };
+    }
+
 }

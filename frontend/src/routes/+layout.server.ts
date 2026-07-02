@@ -5,7 +5,7 @@ export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
   const token = cookies.get('session');
   if (!token) return { user: null };
   const res = await fetch(`${PUBLIC_BACKEND_URL}/api/me`, {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { cookie: `JSESSIONID=${token}` },
   });
   return { user: res.ok ? await res.json() : null };   // shared with every page
 };

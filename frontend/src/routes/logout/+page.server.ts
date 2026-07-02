@@ -6,8 +6,8 @@ export const actions: Actions = {
   default: async ({ cookies, fetch }) => {
     const token = cookies.get('session');
     if (token) {
-      await fetch(`${PUBLIC_BACKEND_URL}/api/logout`, {
-        method: 'POST', headers: { authorization: `Bearer ${token}` },
+      await fetch(`${PUBLIC_BACKEND_URL}/logout`, {
+        method: 'POST', headers: { cookie: `JSESSIONID=${token}` },
       });
       cookies.delete('session', { path: '/' });
     }

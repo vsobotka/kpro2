@@ -5,22 +5,28 @@ import type { Actions } from './$types';
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {
     const data = await request.formData();
-    const res = await fetch(`${PUBLIC_BACKEND_URL}/api/login`, {
+
+    const res = await fetch(`${PUBLIC_BACKEND_URL}/login`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username: data.get('username'), password: data.get('password') }),
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        username: String(data.get('username') ?? ''),
+        password: String(data.get('password') ?? ''),
+      }),
+      redirect: 'manual',
     });
     if (!res.ok) return fail(401, { error: 'Invalid username or password' });
 
-    const { token, expiresAt } = await res.json();
-    cookies.set('session', token, {
-      httpOnly: true,            // JS can't read it → safe from XSS theft
+    const setCookie = res.headers.get('set-cookie');
+    const jsessionid = setCookie?.match(/JSESSIONID=([^;]+)/)?.[1];
+    if (!jsessionid) return fail(401, { error: 'Backend did not return a session' });
+
+    cookies.set('session', jsessionid, {
+      httpOnly: true,
       sameSite: 'lax',
       path: '/',
-      secure: false,             // true in production (HTTPS only)
-      expires: new Date(expiresAt),
+      secure: false,
     });
     throw redirect(303, '/');
   },
 };
-
