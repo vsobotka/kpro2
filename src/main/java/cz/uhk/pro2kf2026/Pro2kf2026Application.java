@@ -1,6 +1,8 @@
 package cz.uhk.pro2kf2026;
 
+import cz.uhk.pro2kf2026.model.Commodity;
 import cz.uhk.pro2kf2026.model.User;
+import cz.uhk.pro2kf2026.repository.CommodityRepository;
 import cz.uhk.pro2kf2026.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -58,6 +60,31 @@ public class Pro2kf2026Application {
                 user.setBalance(50000);
                 userRepository.save(user);
             }
+        };
+    }
+
+    @Bean
+    CommandLineRunner seedCommodities(CommodityRepository commodityRepository) {
+        return args -> {
+            commodityRepository.deleteAll();
+
+            Commodity gold = new Commodity();
+            gold.setSymbol("GOLD");
+            gold.setName("Gold");
+            gold.setUnit("oz");
+            commodityRepository.save(gold);
+
+            Commodity crude = new Commodity();
+            crude.setSymbol("OIL");
+            crude.setName("Brent Crude");
+            crude.setUnit("barrel");
+            commodityRepository.save(crude);
+
+            Commodity wheat = new Commodity();
+            wheat.setSymbol("WHEAT");
+            wheat.setName("Milling Wheat");
+            wheat.setUnit("tonne");
+            commodityRepository.save(wheat);
         };
     }
 
