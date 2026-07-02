@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/rest/**").permitAll()
+                        .requestMatchers("/api/commodities").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/rest/**", "/login", "/logout"))
