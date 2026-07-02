@@ -4,13 +4,14 @@ import cz.uhk.pro2kf2026.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -39,19 +40,21 @@ public class SecurityConfig {
                         .requestMatchers("/rest/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                //.csrf(csrf -> csrf.disable())
-                .formLogin(Customizer.withDefaults())
-                /*.formLogin((form) -> form
-                        .loginPage("/login") // Custom login page
-                        .loginProcessingUrl("/login") // Form submission URL
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()) // Permit all to access the login page*/
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/rest/**", "/login", "/logout"))
+                .formLogin(form -> form
+                        .successHandler((request, response, authentication) ->
+                                response.setStatus(HttpStatus.OK.value()))
+                        .failureHandler((request, response, exception) ->
+                                response.setStatus(HttpStatus.UNAUTHORIZED.value()))
+                )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                response.setStatus(HttpStatus.OK.value()))
                         .permitAll()
                 )
                 .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                         .accessDeniedHandler(accessDeniedHandler()));
 
         return http.build();
