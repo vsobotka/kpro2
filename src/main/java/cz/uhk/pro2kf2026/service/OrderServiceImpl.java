@@ -154,7 +154,12 @@ public class OrderServiceImpl implements OrderService {
     private void adjustHolding(User user, Commodity commodity, int delta) {
         Holding holding = holdingRepository.findByUser_UsernameAndCommodity_Symbol(
                 user.getUsername(), commodity.getSymbol());
-
+        if (holding == null) {
+            holding = new Holding();
+            holding.setUser(user);
+            holding.setCommodity(commodity);
+            holding.setQuantity(0);
+        }
         holding.setQuantity(holding.getQuantity() + delta);
         holdingRepository.save(holding);
     }
@@ -174,6 +179,6 @@ public class OrderServiceImpl implements OrderService {
     private int ownedQuantity(User user, Commodity commodity) {
         Holding holding = holdingRepository.findByUser_UsernameAndCommodity_Symbol(
                 user.getUsername(), commodity.getSymbol());
-        return holding.getQuantity();
+        return holding == null || holding.getQuantity() == null ? 0 : holding.getQuantity();
     }
 }

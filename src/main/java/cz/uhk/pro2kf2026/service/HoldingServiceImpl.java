@@ -71,6 +71,14 @@ public class HoldingServiceImpl implements HoldingService{
             throw new IllegalArgumentException("Unknown commodity");
         }
 
-        return holdingRepository.findByUser_UsernameAndCommodity_Symbol(username, symbol);
+        Holding holding = holdingRepository.findByUser_UsernameAndCommodity_Symbol(username, symbol);
+        if (holding == null) {
+            // No position yet — return a zero holding so the API always sends valid JSON.
+            holding = new Holding();
+            holding.setUser(user);
+            holding.setCommodity(commodity);
+            holding.setQuantity(0);
+        }
+        return holding;
     }
 }

@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: heslo123
+      MARIADB_DATABASE: pro2kf2026
+    ports:
+      - "3307:3306"          # exposed for external DB tools; the app uses db:3306 internally
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy   # wait until MariaDB is actually accepting connections
+    environment:
+      # Override the application.properties datasource to point at the db service.
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/pro2kf2026?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: heslo123
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    healthcheck:
+      # bash /dev/tcp check — true once Tomcat is listening on 8081
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8081"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy   # wait until the Spring app is actually serving
+    environment:
+      # Server-side loads and the Vite proxy both target the backend service by name.
+      PUBLIC_BACKEND_URL: http://backend:8081
+      BACKEND_PROXY_TARGET: http://backend:8081
+    ports:
+      - "5173:5173"
+
+volumes:
+  db-data:
