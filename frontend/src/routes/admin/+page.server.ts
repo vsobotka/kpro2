@@ -14,7 +14,7 @@ const getUser = async (cookies: Cookies, fetch: typeof globalThis.fetch) => {
 export const load: PageServerLoad = async ({ cookies, fetch }) => {
   const user = await getUser(cookies, fetch);
   if (!user) throw redirect(303, '/login');
-  if (user.role !== 'admin') throw redirect(303, '/');   // non-admins kept out
+  if (user.role !== 'ADMIN') throw redirect(303, '/');   // non-admins kept out
 };
 
 export const actions: Actions = {
