@@ -66,26 +66,20 @@ public class Pro2kf2026Application {
     @Bean
     CommandLineRunner seedCommodities(CommodityRepository commodityRepository) {
         return args -> {
-            commodityRepository.deleteAll();
-
-            Commodity gold = new Commodity();
-            gold.setSymbol("GOLD");
-            gold.setName("Gold");
-            gold.setUnit("oz");
-            commodityRepository.save(gold);
-
-            Commodity crude = new Commodity();
-            crude.setSymbol("OIL");
-            crude.setName("Brent Crude");
-            crude.setUnit("barrel");
-            commodityRepository.save(crude);
-
-            Commodity wheat = new Commodity();
-            wheat.setSymbol("WHEAT");
-            wheat.setName("Milling Wheat");
-            wheat.setUnit("tonne");
-            commodityRepository.save(wheat);
+            upsertCommodity(commodityRepository, "GOLD", "Gold", "oz");
+            upsertCommodity(commodityRepository, "OIL", "Brent Crude", "barrel");
+            upsertCommodity(commodityRepository, "WHEAT", "Milling Wheat", "tonne");
         };
     }
 
+    private void upsertCommodity(CommodityRepository repo, String symbol, String name, String unit) {
+        Commodity commodity = repo.findBySymbol(symbol);
+        if (commodity == null) {
+            commodity = new Commodity();
+            commodity.setSymbol(symbol);
+        }
+        commodity.setName(name);
+        commodity.setUnit(unit);
+        repo.save(commodity);
+    }
 }
