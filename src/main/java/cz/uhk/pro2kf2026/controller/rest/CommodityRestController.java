@@ -3,6 +3,7 @@ package cz.uhk.pro2kf2026.controller.rest;
 import cz.uhk.pro2kf2026.model.Commodity;
 import cz.uhk.pro2kf2026.repository.CommodityRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,10 @@ public class CommodityRestController {
     @GetMapping
     public List<Commodity> getCommodities() {
         return commodityRepository.findAll();
+    }
+
+    @GetMapping("/{symbol}")
+    public Commodity getCommodityBySymbol(@PathVariable String symbol) {
+        return commodityRepository.findBySymbol(symbol);
     }
 }
