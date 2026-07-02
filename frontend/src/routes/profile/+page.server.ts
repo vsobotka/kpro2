@@ -6,7 +6,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
   const token = cookies.get('session');
   const transactions = await (await fetch(`${PUBLIC_BACKEND_URL}/api/transactions`, {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { cookie: `JSESSIONID=${token}` },
   })).json();
   console.log(transactions)
   return { transactions };
@@ -22,7 +22,7 @@ export const actions: Actions = {
 
     const res = await fetch(`${PUBLIC_BACKEND_URL}/api/deposit`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ amount }),
     });
     if (!res.ok) return fail(400, { error: (await res.json()).error });
@@ -37,7 +37,7 @@ export const actions: Actions = {
 
     const res = await fetch(`${PUBLIC_BACKEND_URL}/api/withdraw`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ amount }),
     });
     if (!res.ok) return fail(400, { error: (await res.json()).error });

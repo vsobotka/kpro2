@@ -6,21 +6,25 @@ const getUser = async (cookies: Cookies, fetch: typeof globalThis.fetch) => {
   const token = cookies.get('session');
   if (!token) return null;
   const res = await fetch(`${PUBLIC_BACKEND_URL}/api/me`, {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { cookie: `JSESSIONID=${token}` },
   });
   return res.ok ? await res.json() : null;
 };
 
-const getCommodity = async (fetch: typeof globalThis.fetch, symbol: string) => {
-  const res = await fetch(`${PUBLIC_BACKEND_URL}/api/commodities/${symbol}`);
+const getCommodity = async (fetch: typeof globalThis.fetch, symbol: string, token?: string) => {
+  const res = await fetch(`${PUBLIC_BACKEND_URL}/api/commodities/${symbol}`, {
+    headers: token ? { cookie: `JSESSIONID=${token}` } : {},
+  });
   if (!res.ok) throw error(404, `Unknown commodity: ${symbol}`);
   return res.json();
 };
 
 type Order = { id: number; side: "buy" | "sell"; quantity: string; price: string; created_at: string };
 
-const getOrders = async (fetch: typeof globalThis.fetch, symbol: string): Promise<Order[]> => {
-  const res = await fetch(`${PUBLIC_BACKEND_URL}/api/orders/${symbol}`);
+const getOrders = async (fetch: typeof globalThis.fetch, symbol: string, token?: string): Promise<Order[]> => {
+  const res = await fetch(`${PUBLIC_BACKEND_URL}/api/orders/${symbol}`, {
+    headers: token ? { cookie: `JSESSIONID=${token}` } : {},
+  });
   if (!res.ok) throw error(404, `Error fetching orders`);
   return res.json();
 }
@@ -28,7 +32,8 @@ const getOrders = async (fetch: typeof globalThis.fetch, symbol: string): Promis
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
   const user = await getUser(cookies, fetch);
   if (!user) throw redirect(303, '/login');            // hide the page from guests
-  return { commodity: await getCommodity(fetch, params.symbol), orders: await getOrders(fetch, params.symbol) };
+  const token = cookies.get('session');
+  return { commodity: await getCommodity(fetch, params.symbol, token), orders: await getOrders(fetch, params.symbol, token) };
 };
 
 export const actions: Actions = {
@@ -36,7 +41,7 @@ export const actions: Actions = {
     const user = await getUser(cookies, fetch);
     if (!user) throw redirect(303, '/login');          // the real gate: block the POST itself
     if (user.role === 'admin') return fail(403, { error: 'Admins cannot trade' });
-    const commodity = await getCommodity(fetch, params.symbol);   // id from URL, not the form
+    const commodity = await getCommodity(fetch, params.symbol, cookies.get('session'));   // id from URL, not the form
     const f = await request.formData();
     const order = {
       commodityId: commodity.id,
@@ -50,7 +55,7 @@ export const actions: Actions = {
 
     const res = await fetch(`${PUBLIC_BACKEND_URL}/api/orders`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${cookies.get('session')}` },
       body: JSON.stringify(order),
     });
     if (!res.ok) return fail(400, { error: (await res.json()).error });

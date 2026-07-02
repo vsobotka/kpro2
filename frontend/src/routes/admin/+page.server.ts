@@ -6,7 +6,7 @@ const getUser = async (cookies: Cookies, fetch: typeof globalThis.fetch) => {
   const token = cookies.get('session');
   if (!token) return null;
   const res = await fetch(`${PUBLIC_BACKEND_URL}/api/me`, {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { cookie: `JSESSIONID=${token}` },
   });
   return res.ok ? await res.json() : null;
 };
@@ -24,7 +24,7 @@ export const actions: Actions = {
     const f = await request.formData();
     const res = await fetch(`${PUBLIC_BACKEND_URL}/api/commodities`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      headers: { 'content-type': 'application/json', cookie: `JSESSIONID=${token}` },
       body: JSON.stringify({ symbol: f.get('symbol'), name: f.get('name'), unit: f.get('unit') }),
     });
     if (!res.ok) return fail(400, { error: (await res.json()).error });
