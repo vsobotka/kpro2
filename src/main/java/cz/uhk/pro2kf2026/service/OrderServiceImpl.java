@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order placeOrder(OrderRequest request) {
+    public Order placeOrder(String username, OrderRequest request) {
         String side = request.side() == null ? "" : request.side().toLowerCase();
         if (!side.equals("buy") && !side.equals("sell")) {
             throw new IllegalArgumentException("Side must be 'buy' or 'sell'");
@@ -39,8 +39,11 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Price must be positive");
         }
 
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new IllegalArgumentException("Unknown user"));
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("Unknown user");
+        }
+        
         if ("ADMIN".equalsIgnoreCase(user.getRole())) {
             throw new IllegalArgumentException("Admins cannot trade");
         }

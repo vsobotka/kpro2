@@ -45,7 +45,6 @@ export const actions: Actions = {
     const f = await request.formData();
     const order = {
       commodityId: commodity.id,
-      userId: user.id,                                  // identity from the session, not the form
       side: String(f.get('side')),
       quantity: Number(f.get('quantity')),
       price: Number(f.get('price')),

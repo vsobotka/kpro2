@@ -4,6 +4,7 @@ import cz.uhk.pro2kf2026.dto.OrderRequest;
 import cz.uhk.pro2kf2026.model.Order;
 import cz.uhk.pro2kf2026.service.OrderService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,9 +25,9 @@ public class OrderRestController {
     }
 
     @PostMapping
-    public Order create(@RequestBody OrderRequest request) {
+    public Order create(Authentication auth, @RequestBody OrderRequest request) {
         try {
-            return orderService.placeOrder(request);
+            return orderService.placeOrder(auth.getName(), request);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
