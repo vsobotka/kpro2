@@ -1,8 +1,7 @@
 package cz.uhk.pro2kf2026;
 
 import cz.uhk.pro2kf2026.model.User;
-import cz.uhk.pro2kf2026.service.DogService;
-import cz.uhk.pro2kf2026.service.UserService;
+import cz.uhk.pro2kf2026.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,16 +21,18 @@ public class Pro2kf2026Application {
         return new BCryptPasswordEncoder();
     }
 
-    /*@Bean
-    CommandLineRunner commandLineRunner(UserService userService) {
+    @Bean
+    CommandLineRunner seedAdmin(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            User user = new User();
-            user.setUsername("admin");
-            user.setName("Admin");
-            user.setPassword("heslo");
-            user.setRole("ADMIN");
-            userService.saveUser(user);
+            if (userRepository.findByUsername("admin") == null) {
+                User user = new User();
+                user.setUsername("admin");
+                user.setName("Admin");
+                user.setPassword(passwordEncoder.encode("heslo"));
+                user.setRole("ADMIN");
+                userRepository.save(user);
+            }
         };
-    }*/
+    }
 
 }
