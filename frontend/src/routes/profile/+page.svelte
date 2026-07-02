@@ -30,6 +30,9 @@
       <th>Timestamp</th>
       <th>Type</th>
       <th>Change</th>
+      <th>Commodity</th>
+      <th>Quantity</th>
+      <th>Price</th>
     </tr>
   </thead>
   <tbody>
@@ -38,6 +41,9 @@
         <td>{transaction.created_at}</td>
         <td>{transaction.type}</td>
         <td>{transaction.change}</td>
+        <td>{transaction.commodity?.symbol ?? ''}</td>
+        <td>{transaction.quantity}</td>
+        <td>{transaction.price}</td>
       </tr>
     {/each}
   </tbody>
