@@ -4,12 +4,15 @@ import cz.uhk.pro2kf2026.model.Commodity;
 import cz.uhk.pro2kf2026.model.User;
 import cz.uhk.pro2kf2026.repository.CommodityRepository;
 import cz.uhk.pro2kf2026.repository.UserRepository;
+import cz.uhk.pro2kf2026.service.HoldingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @SpringBootApplication
 public class Pro2kf2026Application {
@@ -69,6 +72,20 @@ public class Pro2kf2026Application {
             upsertCommodity(commodityRepository, "GOLD", "Gold", "oz");
             upsertCommodity(commodityRepository, "OIL", "Brent Crude", "barrel");
             upsertCommodity(commodityRepository, "WHEAT", "Milling Wheat", "tonne");
+        };
+    }
+
+    @Bean
+    CommandLineRunner seedHoldings(CommodityRepository commodityRepository, UserRepository userRepository, HoldingService holdingService) {
+        return args -> {
+            List<Commodity> commodities = commodityRepository.findAll();
+            List<User> users = userRepository.findAll();
+
+            for (Commodity commodity : commodities) {
+                for (User user: users) {
+                    holdingService.upsertHolding(user.getUsername(), commodity.getSymbol(), 50);
+                }
+            }
         };
     }
 

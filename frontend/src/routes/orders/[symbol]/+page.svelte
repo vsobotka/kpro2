@@ -10,6 +10,7 @@
 
 <h1>Trade: {data.commodity.name}</h1>
 <p>Priced per {data.commodity.unit}</p>
+<p>Holding: {data.holding.quantity}</p>
 
 {#if form?.success}<p style="color:green">Order placed ✓</p>{/if}
 {#if form?.error}<p style="color:red">{form.error}</p>{/if}

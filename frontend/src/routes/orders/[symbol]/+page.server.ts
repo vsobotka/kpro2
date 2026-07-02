@@ -29,11 +29,19 @@ const getOrders = async (fetch: typeof globalThis.fetch, symbol: string, token?:
   return res.json();
 }
 
+const getHolding = async (fetch: typeof globalThis.fetch, symbol: string, token?: string): Promise<{quantity: number}[]> => {
+  const res = await fetch(`${PUBLIC_BACKEND_URL}/api/holdings/${symbol}`, {
+    headers: token ? { cookie: `JSESSIONID=${token}` } : {},
+  });
+  if (!res.ok) throw error(404, `Error fetching holding`);
+  return res.json();
+}
+
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
   const user = await getUser(cookies, fetch);
   if (!user) throw redirect(303, '/login');            // hide the page from guests
   const token = cookies.get('session');
-  return { commodity: await getCommodity(fetch, params.symbol, token), orders: await getOrders(fetch, params.symbol, token) };
+  return { commodity: await getCommodity(fetch, params.symbol, token), orders: await getOrders(fetch, params.symbol, token), holding: await getHolding(fetch, params.symbol, token) };
 };
 
 export const actions: Actions = {
