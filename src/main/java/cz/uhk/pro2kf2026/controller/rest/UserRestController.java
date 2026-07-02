@@ -3,7 +3,6 @@ package cz.uhk.pro2kf2026.controller.rest;
 import cz.uhk.pro2kf2026.model.User;
 import cz.uhk.pro2kf2026.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

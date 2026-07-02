@@ -20,7 +20,6 @@ public class CommodityRestController {
 
     @GetMapping
     public List<Commodity> getCommodities() {
-        System.out.println("Commodities");
         return commodityRepository.findAll();
     }
 }
