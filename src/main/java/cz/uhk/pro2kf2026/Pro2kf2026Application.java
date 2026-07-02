@@ -30,6 +30,7 @@ public class Pro2kf2026Application {
                 user.setName("Admin");
                 user.setPassword(passwordEncoder.encode("heslo"));
                 user.setRole("ADMIN");
+                user.setBalance(0);
                 userRepository.save(user);
             }
         };
@@ -44,6 +45,7 @@ public class Pro2kf2026Application {
                 user.setName("Alice");
                 user.setPassword(passwordEncoder.encode("alicepw"));
                 user.setRole("USER");
+                user.setBalance(100000);
                 userRepository.save(user);
             }
 
@@ -53,6 +55,7 @@ public class Pro2kf2026Application {
                 user.setName("Bob");
                 user.setPassword(passwordEncoder.encode("bobpw"));
                 user.setRole("USER");
+                user.setBalance(50000);
                 userRepository.save(user);
             }
         };

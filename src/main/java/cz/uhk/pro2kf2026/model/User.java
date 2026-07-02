@@ -1,5 +1,6 @@
 package cz.uhk.pro2kf2026.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,27 +13,16 @@ public class User {
     private long id;
     private String name;
     private String username;
+    @JsonIgnore
     private String password;
     private String role;
-
-    @OneToMany(mappedBy = "user")
-    private List<Dog> dogs;
-
-    public List<Dog> getDogs() {
-        return dogs;
-    }
-
-    public void setDogs(List<Dog> dogs) {
-        this.dogs = dogs;
-    }
+    private Integer balance;
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public void setId(long id) { this.id = id; }
 
     public String getName() {
         return name;
@@ -64,5 +54,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Integer balance) {
+        this.balance = balance;
     }
 }
