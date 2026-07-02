@@ -35,6 +35,10 @@ public class HoldingServiceImpl implements HoldingService{
             throw new IllegalArgumentException("Unknown commodity");
         }
 
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
         Holding holding = holdingRepository.findByUser_UsernameAndCommodity_Symbol(username, symbol);
         if (holding == null) {
             holding = new Holding();
